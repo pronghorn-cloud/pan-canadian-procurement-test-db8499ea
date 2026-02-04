@@ -1,7 +1,4 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<html lang="en" class="scroll-smooth">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pan-Canadian Procurement Tool</title>
@@ -11,105 +8,178 @@
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <!-- Chart.js CDN for visualizations -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <style>
-            --secondary-white: #ffffff;
-            --light-grey: #f4f4f4;
-            --dark-grey: #333;
-<body>
-    <div id="app" class="font-sans antialiased text-gray-800 bg-gray-100 min-h-screen">
-        }
-    <header class="bg-red-700 text-white p-4 flex items-center shadow-md">
         body {
-        <svg class="h-8 w-8 text-white mr-4" fill="currentColor" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path d="M100,0 C120,0 140,20 140,40 C140,60 120,80 100,80 C80,80 60,60 60,40 C60,20 80,0 100,0 M150,50 C160,50 170,60 170,70 C170,80 160,90 150,90 C140,90 130,80 130,70 C130,60 140,50 150,50 M50,50 C60,50 70,60 70,70 C70,80 60,90 50,90 C40,90 30,80 30,70 C30,60 40,50 50,50 M170,90 C180,90 190,100 190,110 C190,120 180,130 170,130 C160,130 150,120 150,110 C150,100 160,90 170,90 M30,90 C40,90 50,100 50,110 C50,120 40,130 30,130 C20,130 10,120 10,110 C10,100 20,90 30,90 M100,90 C110,90 120,100 120,110 C120,120 110,130 100,130 C90,130 80,120 80,110 C80,100 90,90 100,90 M100,140 C110,140 120,150 120,160 C120,170 110,180 100,180 C90,180 80,170 80,160 C80,150 90,140 100,140 Z"/></svg>
-        <h1 class="text-2xl font-bold">Pan-Canadian Procurement Tool</h1>
-    <div class="max-w-6xl mx-auto mt-8 p-6 bg-white rounded-lg shadow-xl">
-        .search-filter-controls {
-        <section id="new-procurement" class="mb-8 pb-6 border-b border-gray-200 last:border-b-0">
-            <h2 class="text-2xl font-semibold text-red-700 border-b-2 border-red-700 pb-2 mb-4">New Procurement Request</h2>
-        <svg class="h-8 w-8 text-white mr-4" fill="currentColor" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path d="M100,0 C120,0 140,20 140,40 C140,60 120,80 100,80 C80,80 60,60 60,40 C60,20 80,0 100,0 M150,50 C160,50 170,60 170,70 C170,80 160,90 150,90 C140,90 130,80 130,70 C130,60 140,50 150,50 M50,50 C60,50 70,60 70,70 C70,80 60,90 50,90 C40,90 30,80 30,70 C30,60 40,50 50,50 M170,90 C180,90 190,100 190,110 C190,120 180,130 170,130 C160,130 150,120 150,110 C150,100 160,90 170,90 M30,90 C40,90 50,100 50,110 C50,120 40,130 30,130 C20,130 10,120 10,110 C10,100 20,90 30,90 M100,90 C110,90 120,100 120,110 C120,120 110,130 100,130 C90,130 80,120 80,110 C80,100 90,90 100,90 M100,140 C110,140 120,150 120,160 C120,170 110,180 100,180 C90,180 80,170 80,160 C80,150 90,140 100,140 Z"/></svg>
-            <button @click="openModal" class="btn bg-red-700 hover:bg-red-800 text-white font-bold py-2 px-4 rounded transition duration-300">Start New Procurement</button>
+            font-family: sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
         }
 
-            <div v-if="isNewProcurementModalOpen" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
-                <div class="bg-white p-6 rounded-lg shadow-xl w-11/12 md:w-2/3 lg:w-1/2 relative">
-                    <span @click="closeModal" class="close-button absolute top-3 right-5 text-gray-700 text-3xl font-bold cursor-pointer hover:text-red-700">&times;</span>
-                    <h3 class="text-xl font-semibold mb-4">New Procurement Details</h3>
-                    <div class="modal-body p-4">
-                        <label for="procurementDescription" class="block text-sm font-medium text-gray-700 mb-1">Description of Needs:</label>
-                        <textarea v-model="procurementDescription" rows="5" placeholder="e.g., Software for HR management, Consulting services for IT infrastructure, etc." required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 mb-4 focus:ring-red-500 focus:border-red-500"></textarea>
-            min-width: 150px;
-                        <select v-model="procurementCategory" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 mb-4 focus:ring-red-500 focus:border-red-500">
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            background-color: #dc2626;
+            color: #fff;
+            padding: 15px 20px;
+            border-radius: 8px 8px 0 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 1.8em;
+        }
+
+        .section-title {
+            border-bottom: 2px solid #dc2626;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            color: #dc2626;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input[type="text"],
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .btn {
+            background-color: #dc2626;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #b91c1c;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 600px;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .close-button {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            cursor: pointer;
+        }
+
+        .close-button:hover,
+        .close-button:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .comparable-item {
+            background-color: #f9f9f9;
+            border: 1px solid #eee;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
 
         .contract-list {
             list-style: none;
             padding: 0;
         }
 
-                        <input v-model="estimatedValue" type="text" placeholder="e.g., 50,000, 1,000,000" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 mb-4 focus:ring-red-500 focus:border-red-500">
-            background-color: var(--light-grey);
-            border: 1px solid var(--border-grey);
-                        <select v-model="deliveryProvince" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 mb-4 focus:ring-red-500 focus:border-red-500">
+        .contract-item {
+            background-color: #f9f9f9;
+            border: 1px solid #eee;
+            padding: 15px;
             margin-bottom: 10px;
-            border-radius: 5px;
+            border-radius: 4px;
             display: flex;
             flex-direction: column;
             gap: 5px;
         }
 
         .contract-item strong {
-            color: var(--primary-red);
+            color: #dc2626;
         }
 
         .no-results {
-            text-align: center;
-            color: var(--dark-grey);
-                        <button @click="findComparables" class="btn bg-red-700 hover:bg-red-800 text-white font-bold py-2 px-4 rounded transition duration-300">Find Comparables</button>
-        }
-                        <div v-if="showComparablesResults" class="comparables-results mt-6 pt-4 border-t border-gray-200">
-                            <h4 class="text-lg font-semibold mb-3">Comparable Contracts Found:</h4>
-                            <div id="comparablesList" class="space-y-3">
-                                <div v-for="comp in comparables" :key="comp.id" class="comparable-item bg-gray-50 border border-gray-200 p-3 rounded-md">
-                                    <strong class="text-red-700">Contract ID: {{ comp.id }}</strong><br>
-                                    Description: {{ comp.description }}<br>
-                                    Vendor: {{ comp.vendor }}<br>
-                                    Value: {{ comp.value }}<br>
-                                    Province: {{ comp.province }}
-                                </div>
-                    <div class="modal-body">
+
         <section id="current-contracts" class="mb-8 pb-6 border-b border-gray-200 last:border-b-0">
             <h2 class="text-2xl font-semibold text-red-700 border-b-2 border-red-700 pb-2 mb-4">Search Existing Contracts</h2>
-
-                        <label for="procurementCategory">Category:</label>
             <div class="search-filter-controls flex flex-wrap gap-4 mb-6">
-                <input type="text" id="contractSearch" placeholder="Search by description, vendor, ID..." class="flex-1 min-w-[150px] p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500">
-                <select id="filterProvince" class="flex-1 min-w-[150px] p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500">
-                            <option value="Consulting">Consulting Services</option>
-                            <option value="Facilities">Facilities Management</option>
-                            <option value="Supplies">Office Supplies</option>
-                            <option value="Other">Other</option>
-                        </select>
-
-                        <label for="estimatedValue">Estimated Value (CAD):</label>
                 <input v-model="searchTerm" type="text" placeholder="Search by description, vendor, ID..." class="flex-1 min-w-[150px] p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500">
                 <select v-model="filterProvince" class="flex-1 min-w-[150px] p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500">
-                        <label for="deliveryProvince">Desired Delivery Province:</label>
-                <select id="filterCategory" class="flex-1 min-w-[150px] p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500">
-                            <option value="">Select Province</option>
-                <button id="applyFiltersBtn" class="btn bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded transition duration-300">Apply Filters</button>
-                            <option value="BC">British Columbia</option>
-                            <option value="MB">Manitoba</option>
-                            <option value="NB">New Brunswick</option>
-                            <option value="NL">Newfoundland and Labrador</option>
-            <ul id="contractList" class="list-none p-0 space-y-3">
-                <li class="contract-item bg-gray-50 border border-gray-200 p-4 rounded-md flex flex-col gap-1" data-province="ON" data-category="IT" data-description="Software License Agreement">
+                    <option value="">All Provinces</option>
+                    <option value="AB">Alberta</option>
+                    <option value="BC">British Columbia</option>
+                    <option value="MB">Manitoba</option>
+                    <option value="NB">New Brunswick</option>
+                    <option value="NL">Newfoundland and Labrador</option>
+                    <option value="NS">Nova Scotia</option>
+                    <option value="ON">Ontario</option>
+                    <option value="PE">Prince Edward Island</option>
+                    <option value="QC">Quebec</option>
+                    <option value="SK">Saskatchewan</option>
+                </select>
                 <select v-model="filterCategory" class="flex-1 min-w-[150px] p-2 border border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500">
-                            <option value="QC">Quebec</option>
+                    <option value="">All Categories</option>
+                    <option value="IT">Information Technology</option>
+                    <option value="Consulting">Consulting Services</option>
+                    <option value="Facilities">Facilities Management</option>
+                    <option value="Supplies">Office Supplies</option>
+                    <option value="Other">Other</option>
+                </select>
                 <button @click="applyFilters" class="btn bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded transition duration-300">Apply Filters</button>
-                        </select>
+            </div>
 
-                <li class="contract-item bg-gray-50 border border-gray-200 p-4 rounded-md flex flex-col gap-1" data-province="BC" data-category="Consulting" data-description="Strategic Planning Consulting">
-                    <strong class="text-red-700">Contract ID: C002</strong><br>
             <ul id="contractList" class="list-none p-0 space-y-3">
                 <li v-for="contract in filteredContracts" :key="contract.id" class="contract-item bg-gray-50 border border-gray-200 p-4 rounded-md flex flex-col gap-1">
                     <strong class="text-red-700">Contract ID: {{ contract.id }}</strong><br>
@@ -121,12 +191,19 @@
                 </li>
             </ul>
             <p v-if="filteredContracts.length === 0" id="noContractsMessage" class="no-results text-center text-gray-600 italic mt-4">No contracts found matching your criteria.</p>
-        const { createApp, ref, reactive } = Vue;
+        </section>
 
-        createApp({
-            setup() {
-                const isNewProcurementModalOpen = ref(false);
-        const { createApp, ref, reactive, computed } = Vue;
+        <section id="procurement-analytics" class="mb-8 pb-6 border-b border-gray-200 last:border-b-0">
+            <h2 class="text-2xl font-semibold text-red-700 border-b-2 border-red-700 pb-2 mb-4">Procurement Analytics</h2>
+            <p class="mb-4">Overview of contract distribution by category.</p>
+            <div class="relative h-80">
+                <canvas id="categoryChart"></canvas>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        const { createApp, ref, reactive, computed, onMounted } = Vue;
 
         createApp({
             setup() {
@@ -143,7 +220,7 @@
                         id: 'C98765',
                         description: 'HR Software Implementation (Ontario)',
                         vendor: 'TechSolutions Inc.',
-                        value: '$45,500',
+                        value: '$45,000',
                         province: 'ON'
                     },
                     {
@@ -155,6 +232,185 @@
                     },
                     {
                         id: 'C54321',
+                        description: 'Office Supply Agreement (Quebec)',
+                        vendor: 'OfficeMart Canada',
+                        value: '$15,000',
+                        province: 'QC'
+                    }
+                ]);
+
+                // Search and Filter State
+                const searchTerm = ref('');
+                const filterProvince = ref('');
+                const filterCategory = ref('');
+
+                const contracts = reactive([
+                    {
+                        id: 'C001',
+                        description: 'Software License Agreement for Project Management Tools',
+                        vendor: 'Agile Solutions Inc.',
+                        value: '$75,000',
+                        province: 'ON',
+                        category: 'IT'
+                    },
+                    {
+                        id: 'C002',
+                        description: 'Strategic Planning Consulting Services',
+                        vendor: 'West Coast Advisory',
+                        value: '$150,000',
+                        province: 'BC',
+                        category: 'Consulting'
+                    },
+                    {
+                        id: 'C003',
+                        description: 'Office Cleaning Services for Government Buildings',
+                        vendor: 'Alberta Cleaners Ltd.',
+                        value: '$30,000',
+                        province: 'AB',
+                        category: 'Facilities'
+                    },
+                    {
+                        id: 'C004',
+                        description: 'Bulk Office Supplies Procurement',
+                        vendor: 'Bureau Direct',
+                        value: '$20,000',
+                        province: 'QC',
+                        category: 'Supplies'
+                    },
+                    {
+                        id: 'C005',
+                        description: 'Cloud Hosting Services for Data Management',
+                        vendor: 'CloudNet Corp.',
+                        value: '$100,000',
+                        province: 'ON',
+                        category: 'IT'
+                    },
+                    {
+                        id: 'C006',
+                        description: 'HR Policy Review and Update Consulting',
+                        vendor: 'Prairies HR Solutions',
+                        value: '$60,000',
+                        province: 'MB',
+                        category: 'Consulting'
+                    },
+                    {
+                        id: 'C007',
+                        description: 'HVAC System Maintenance for Public Buildings',
+                        vendor: 'Maritime Climate Control',
+                        value: '$40,000',
+                        province: 'NS',
+                        category: 'Facilities'
+                    }
+                ]);
+
+                const filteredContracts = computed(() => {
+                    return contracts.filter(contract => {
+                        const matchesSearch = contract.description.toLowerCase().includes(searchTerm.value.toLowerCase()) ||
+                                              contract.vendor.toLowerCase().includes(searchTerm.value.toLowerCase()) ||
+                                              contract.id.toLowerCase().includes(searchTerm.value.toLowerCase());
+                        const matchesProvince = filterProvince.value === '' || contract.province === filterProvince.value;
+                        const matchesCategory = filterCategory.value === '' || contract.category === filterCategory.value;
+                        return matchesSearch && matchesProvince && matchesCategory;
+                    });
+                });
+
+                // Modal Methods
+                const openModal = () => {
+                    isNewProcurementModalOpen.value = true;
+                    showComparablesResults.value = false; // Hide results when opening modal
+                };
+
+                const closeModal = () => {
+                    isNewProcurementModalOpen.value = false;
+                };
+
+                const findComparables = () => {
+                    // In a real application, this would send data to a backend and fetch real comparables.
+                    // For this mockup, we just show the static comparable results.
+                    showComparablesResults.value = true;
+                };
+
+                // Chart Logic
+                onMounted(() => {
+                    renderChart();
+                });
+
+                const renderChart = () => {
+                    const ctx = document.getElementById('categoryChart');
+                    if (ctx) {
+                        const categoryCounts = contracts.reduce((acc, contract) => {
+                            acc[contract.category] = (acc[contract.category] || 0) + 1;
+                            return acc;
+                        }, {});
+
+                        new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                                labels: Object.keys(categoryCounts),
+                                datasets: [{
+                                    label: '# of Contracts by Category',
+                                    data: Object.values(categoryCounts),
+                                    backgroundColor: [
+                                        'rgba(255, 99, 132, 0.6)',
+                                        'rgba(54, 162, 235, 0.6)',
+                                        'rgba(255, 206, 86, 0.6)',
+                                        'rgba(75, 192, 192, 0.6)',
+                                        'rgba(153, 102, 255, 0.6)',
+                                        'rgba(255, 159, 64, 0.6)'
+                                    ],
+                                    borderColor: [
+                                        'rgba(255, 99, 132, 1)',
+                                        'rgba(54, 162, 235, 1)',
+                                        'rgba(255, 206, 86, 1)',
+                                        'rgba(75, 192, 192, 1)',
+                                        'rgba(153, 102, 255, 1)',
+                                        'rgba(255, 159, 64, 1)'
+                                    ],
+                                    borderWidth: 1
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                scales: {
+                                    y: {
+                                        beginAtZero: true
+                                    }
+                                }
+                            }
+                        });
+                    }
+                };
+
+                // No explicit applyFilters method needed for Vue as filters are reactive via computed property
+                const applyFilters = () => {
+                    // This method is called by the button, but the actual filtering happens reactively.
+                    // We can leave it empty or add logging if needed.
+                    console.log('Applying filters (reactive update)');
+                };
+
+                return {
+                    isNewProcurementModalOpen,
+                    procurementDescription,
+                    procurementCategory,
+                    estimatedValue,
+                    deliveryProvince,
+                    showComparablesResults,
+                    comparables,
+                    openModal,
+                    closeModal,
+                    findComparables,
+                    searchTerm,
+                    filterProvince,
+                    filterCategory,
+                    filteredContracts,
+                    applyFilters // Expose applyFilters if needed for explicit button click
+                };
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>
                         description: 'Office Supply Agreement (Quebec)',
             <p v-if="filteredContracts.length === 0" id="noContractsMessage" class="no-results text-center text-gray-600 italic mt-4">No contracts found matching your criteria.</p>
         </section>
