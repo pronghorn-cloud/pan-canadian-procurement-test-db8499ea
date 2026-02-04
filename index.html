@@ -1,5 +1,7 @@
 <!DOCTYPE html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pan-Canadian Procurement Tool</title>
     <!-- Tailwind CSS CDN -->
@@ -80,7 +82,7 @@
         }
 
         .modal {
-            display: none;
+            display: none; /* Controlled by Vue v-if */
             position: fixed;
             z-index: 1000;
             left: 0;
@@ -151,7 +153,89 @@
         }
 
         .no-results {
+            /* Correctly closed style block */
+        }
+    </style>
+</head>
+<body>
+    <div id="app" class="container">
+        <header class="header bg-red-700 text-white p-4 rounded-t-lg flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-8 h-8">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.879m0 0a3 3 0 100 4.243A3 3 0 0012 18.75V21h-1.5zM12 6v-3m-3 1.182l.879-.879m0 0a3 3 0 110-4.243A3 3 0 0112 3.25V1.5zM6.75 18.75a3 3 0 100-4.243A3 3 0 006.75 18.75zM16.5 18.75a3 3 0 100-4.243A3 3 0 0016.5 18.75z" />
+            </svg>
+            <h1 class="text-2xl font-bold">Pan-Canadian Procurement Tool</h1>
+        </header>
 
+        <!-- New Procurement Section -->
+        <section id="new-procurement" class="p-6 bg-white rounded-b-lg shadow-md mb-8">
+            <h2 class="section-title text-2xl font-semibold text-red-700 border-b-2 border-red-700 pb-2 mb-4">New Procurement Request</h2>
+            <button @click="openModal" class="btn bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition duration-300">
+                Initiate New Procurement
+            </button>
+
+            <!-- New Procurement Modal -->
+            <div v-if="isNewProcurementModalOpen" class="modal fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
+                <div class="modal-content bg-white p-6 rounded-lg shadow-xl w-11/12 md:w-2/3 lg:w-1/2 relative">
+                    <span @click="closeModal" class="close-button absolute top-3 right-5 text-gray-500 hover:text-gray-800 text-3xl font-bold cursor-pointer">&times;</span>
+                    <h3 class="text-xl font-bold mb-4">New Procurement Details</h3>
+                    <div class="form-group mb-4">
+                        <label for="procurementDescription" class="block text-gray-700 text-sm font-bold mb-2">Description:</label>
+                        <textarea v-model="procurementDescription" id="procurementDescription" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" rows="3" placeholder="e.g., Cloud Hosting Services for Data Management Platform"></textarea>
+                    </div>
+                    <div class="form-group mb-4">
+                        <label for="procurementCategory" class="block text-gray-700 text-sm font-bold mb-2">Category:</label>
+                        <select v-model="procurementCategory" id="procurementCategory" class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                            <option value="">Select Category</option>
+                            <option value="IT">Information Technology</option>
+                            <option value="Consulting">Consulting Services</option>
+                            <option value="Facilities">Facilities Management</option>
+                            <option value="Supplies">Office Supplies</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group mb-4">
+                        <label for="estimatedValue" class="block text-gray-700 text-sm font-bold mb-2">Estimated Value ($):</label>
+                        <input v-model="estimatedValue" type="text" id="estimatedValue" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="e.g., 120000">
+                    </div>
+                    <div class="form-group mb-6">
+                        <label for="deliveryProvince" class="block text-gray-700 text-sm font-bold mb-2">Delivery Province:</label>
+                        <select v-model="deliveryProvince" id="deliveryProvince" class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                            <option value="">Select Province</option>
+                            <option value="AB">Alberta</option>
+                            <option value="BC">British Columbia</option>
+                            <option value="MB">Manitoba</option>
+                            <option value="NB">New Brunswick</option>
+                            <option value="NL">Newfoundland and Labrador</option>
+                            <option value="NS">Nova Scotia</option>
+                            <option value="ON">Ontario</option>
+                            <option value="PE">Prince Edward Island</option>
+                            <option value="QC">Quebec</option>
+                            <option value="SK">Saskatchewan</option>
+                        </select>
+                    </div>
+                    <button @click="findComparables" class="btn bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300">
+                        Find Comparables
+                    </button>
+
+                    <!-- Comparables Results Section -->
+                    <div v-if="showComparablesResults" id="comparablesResults" class="mt-6 p-4 bg-gray-100 border border-gray-200 rounded-md">
+                        <h4 class="text-lg font-semibold mb-3">Comparable Contracts Found:</h4>
+                        <div v-if="comparables.length > 0">
+                            <div v-for="item in comparables" :key="item.id" class="comparable-item bg-white border border-gray-200 p-3 rounded-md mb-2">
+                                <strong>Contract ID:</strong> {{ item.id }}<br>
+                                <strong>Description:</strong> {{ item.description }}<br>
+                                <strong>Vendor:</strong> {{ item.vendor }}<br>
+                                <strong>Value:</strong> {{ item.value }}<br>
+                                <strong>Province:</strong> {{ item.province }}
+                            </div>
+                        </div>
+                        <p v-else class="text-gray-600 italic">No comparable contracts found.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Current Contracts Section -->
         <section id="current-contracts" class="mb-8 pb-6 border-b border-gray-200 last:border-b-0">
             <h2 class="text-2xl font-semibold text-red-700 border-b-2 border-red-700 pb-2 mb-4">Search Existing Contracts</h2>
             <div class="search-filter-controls flex flex-wrap gap-4 mb-6">
@@ -193,6 +277,7 @@
             <p v-if="filteredContracts.length === 0" id="noContractsMessage" class="no-results text-center text-gray-600 italic mt-4">No contracts found matching your criteria.</p>
         </section>
 
+        <!-- Procurement Analytics Section -->
         <section id="procurement-analytics" class="mb-8 pb-6 border-b border-gray-200 last:border-b-0">
             <h2 class="text-2xl font-semibold text-red-700 border-b-2 border-red-700 pb-2 mb-4">Procurement Analytics</h2>
             <p class="mb-4">Overview of contract distribution by category.</p>
@@ -408,639 +493,6 @@
                 };
             }
         }).mount('#app');
-    </script>
-</body>
-</html>
-                        description: 'Office Supply Agreement (Quebec)',
-            <p v-if="filteredContracts.length === 0" id="noContractsMessage" class="no-results text-center text-gray-600 italic mt-4">No contracts found matching your criteria.</p>
-        </section>
-
-        <section id="procurement-analytics" class="mb-8 pb-6 border-b border-gray-200 last:border-b-0">
-            <h2 class="text-2xl font-semibold text-red-700 border-b-2 border-red-700 pb-2 mb-4">Procurement Analytics</h2>
-            <p class="mb-4">Overview of contract distribution by category.</p>
-            <div class="relative h-80">
-                <canvas id="categoryChart"></canvas>
-            </div>
-        </section>
-    </div>
-
-</body>
-                        value: '$15,000',
-        const { createApp, ref, reactive, computed, onMounted } = Vue;
-
-        createApp({
-            setup() {
-                // New Procurement Modal State
-                const isNewProcurementModalOpen = ref(false);
-                const procurementDescription = ref('');
-                const procurementCategory = ref('');
-                const estimatedValue = ref('');
-                const deliveryProvince = ref('');
-                const showComparablesResults = ref(false);
-
-                const comparables = reactive([
-                    {
-                        id: 'C98765',
-                        description: 'HR Software Implementation (Ontario)',
-                        vendor: 'TechSolutions Inc.',
-                        value: '$45,000',
-                        province: 'ON'
-                    },
-                    {
-                        id: 'C12345',
-                        description: 'IT Consulting Services (Alberta)',
-                        vendor: 'Global Consultants',
-                        value: '$120,000',
-                        province: 'AB'
-                    },
-                    {
-                        id: 'C54321',
-                        description: 'Office Supply Agreement (Quebec)',
-                        vendor: 'OfficeMart Canada',
-                        value: '$15,000',
-                        province: 'QC'
-                    }
-                ]);
-
-                // Search and Filter State
-                const searchTerm = ref('');
-                const filterProvince = ref('');
-                const filterCategory = ref('');
-
-                const contracts = reactive([
-                    {
-                        id: 'C001',
-                        description: 'Software License Agreement for Project Management Tools',
-                        vendor: 'Agile Solutions Inc.',
-                        value: '$75,000',
-                        province: 'ON',
-                        category: 'IT'
-                    },
-                    {
-                        id: 'C002',
-                        description: 'Strategic Planning Consulting Services',
-                        vendor: 'West Coast Advisory',
-                        value: '$150,000',
-                        province: 'BC',
-                        category: 'Consulting'
-                    },
-                    {
-                        id: 'C003',
-                        description: 'Office Cleaning Services for Government Buildings',
-                        vendor: 'Alberta Cleaners Ltd.',
-                        value: '$30,000',
-                        province: 'AB',
-                        category: 'Facilities'
-                    },
-                    {
-                        id: 'C004',
-                        description: 'Bulk Office Supplies Procurement',
-                        vendor: 'Bureau Direct',
-                        value: '$20,000',
-                        province: 'QC',
-                        category: 'Supplies'
-                    },
-                    {
-                        id: 'C005',
-                        description: 'Cloud Hosting Services for Data Management',
-                        vendor: 'CloudNet Corp.',
-                        value: '$100,000',
-                        province: 'ON',
-                        category: 'IT'
-                    },
-                    {
-                        id: 'C006',
-                        description: 'HR Policy Review and Update Consulting',
-                        vendor: 'Prairies HR Solutions',
-                        value: '$60,000',
-                        province: 'MB',
-                        category: 'Consulting'
-                    },
-                    {
-                        id: 'C007',
-                        description: 'HVAC System Maintenance for Public Buildings',
-                        vendor: 'Maritime Climate Control',
-                        value: '$40,000',
-                        province: 'NS',
-                        category: 'Facilities'
-                    }
-                ]);
-
-                const filteredContracts = computed(() => {
-                    return contracts.filter(contract => {
-                        const matchesSearch = contract.description.toLowerCase().includes(searchTerm.value.toLowerCase()) ||
-                                              contract.vendor.toLowerCase().includes(searchTerm.value.toLowerCase()) ||
-                                              contract.id.toLowerCase().includes(searchTerm.value.toLowerCase());
-                        const matchesProvince = filterProvince.value === '' || contract.province === filterProvince.value;
-                        const matchesCategory = filterCategory.value === '' || contract.category === filterCategory.value;
-                        return matchesSearch && matchesProvince && matchesCategory;
-                    });
-                });
-
-                // Modal Methods
-                const openModal = () => {
-                    isNewProcurementModalOpen.value = true;
-                    showComparablesResults.value = false; // Hide results when opening modal
-                };
-
-                const closeModal = () => {
-                    isNewProcurementModalOpen.value = false;
-                };
-
-                const findComparables = () => {
-                    // In a real application, this would send data to a backend and fetch real comparables.
-                    // For this mockup, we just show the static comparable results.
-                    showComparablesResults.value = true;
-                };
-
-                // Chart Logic
-                onMounted(() => {
-                    renderChart();
-                });
-
-                const renderChart = () => {
-                    const ctx = document.getElementById('categoryChart');
-                    if (ctx) {
-                        const categoryCounts = contracts.reduce((acc, contract) => {
-                            acc[contract.category] = (acc[contract.category] || 0) + 1;
-                            return acc;
-                        }, {});
-
-                        new Chart(ctx, {
-                            type: 'bar',
-                            data: {
-                                labels: Object.keys(categoryCounts),
-                                datasets: [{
-                                    label: '# of Contracts by Category',
-                                    data: Object.values(categoryCounts),
-                                    backgroundColor: [
-                                        'rgba(255, 99, 132, 0.6)',
-                                        'rgba(54, 162, 235, 0.6)',
-                                        'rgba(255, 206, 86, 0.6)',
-                                        'rgba(75, 192, 192, 0.6)',
-                                        'rgba(153, 102, 255, 0.6)',
-                                        'rgba(255, 159, 64, 0.6)'
-                                    ],
-                                    borderColor: [
-                                        'rgba(255, 99, 132, 1)',
-                                        'rgba(54, 162, 235, 1)',
-                                        'rgba(255, 206, 86, 1)',
-                                        'rgba(75, 192, 192, 1)',
-                                        'rgba(153, 102, 255, 1)',
-                                        'rgba(255, 159, 64, 1)'
-                                    ],
-                                    borderWidth: 1
-                                }]
-                            },
-                            options: {
-                                responsive: true,
-                                maintainAspectRatio: false,
-                                scales: {
-                                    y: {
-                                        beginAtZero: true
-                                    }
-                                }
-                            }
-                        });
-                    }
-                };
-
-                return {
-                    isNewProcurementModalOpen,
-                    procurementDescription,
-                    procurementCategory,
-                    estimatedValue,
-                    deliveryProvince,
-                    showComparablesResults,
-                    comparables,
-                    openModal,
-                    closeModal,
-                    findComparables,
-                    searchTerm,
-                    filterProvince,
-                    filterCategory,
-                    filteredContracts
-                };
-            }
-        }).mount('#app');
-
-                // Search and Filter State
-                const searchTerm = ref('');
-                const filterProvince = ref('');
-                const filterCategory = ref('');
-
-                const contracts = reactive([
-                    {
-                        id: 'C001',
-                        description: 'Software License Agreement for Project Management Tools',
-                        vendor: 'Agile Solutions Inc.',
-                        value: '$75,000',
-                        province: 'ON',
-                        category: 'IT'
-                    },
-                    {
-                        id: 'C002',
-                        description: 'Strategic Planning Consulting Services',
-                        vendor: 'West Coast Advisory',
-                        value: '$150,000',
-                        province: 'BC',
-                        category: 'Consulting'
-                    },
-                    {
-                        id: 'C003',
-                        description: 'Office Cleaning Services for Government Buildings',
-                        vendor: 'Alberta Cleaners Ltd.',
-                        value: '$30,000',
-                        province: 'AB',
-                        category: 'Facilities'
-                    },
-                    {
-                        id: 'C004',
-                        description: 'Bulk Office Supplies Procurement',
-                        vendor: 'Bureau Direct',
-                        value: '$20,000',
-                        province: 'QC',
-                        category: 'Supplies'
-                    },
-                    {
-                        id: 'C005',
-                        description: 'Cloud Hosting Services for Data Management',
-                        vendor: 'CloudNet Corp.',
-                        value: '$100,000',
-                        province: 'ON',
-                        category: 'IT'
-                    },
-                    {
-                        id: 'C006',
-                        description: 'HR Policy Review and Update Consulting',
-                        vendor: 'Prairies HR Solutions',
-                        value: '$60,000',
-                        province: 'MB',
-                        category: 'Consulting'
-                    },
-                    {
-                        id: 'C007',
-                        description: 'HVAC System Maintenance for Public Buildings',
-                        vendor: 'Maritime Climate Control',
-                        value: '$40,000',
-                        province: 'NS',
-                        category: 'Facilities'
-                    }
-                ]);
-
-                const filteredContracts = computed(() => {
-                    return contracts.filter(contract => {
-                        const matchesSearch = contract.description.toLowerCase().includes(searchTerm.value.toLowerCase()) ||
-                                              contract.vendor.toLowerCase().includes(searchTerm.value.toLowerCase()) ||
-                                              contract.id.toLowerCase().includes(searchTerm.value.toLowerCase());
-                        const matchesProvince = filterProvince.value === '' || contract.province === filterProvince.value;
-                        const matchesCategory = filterCategory.value === '' || contract.category === filterCategory.value;
-                        return matchesSearch && matchesProvince && matchesCategory;
-                    });
-                });
-
-                // Modal Methods
-                const openModal = () => {
-                    isNewProcurementModalOpen.value = true;
-                    showComparablesResults.value = false; // Hide results when opening modal
-                };
-
-                const closeModal = () => {
-                    isNewProcurementModalOpen.value = false;
-                };
-
-                const findComparables = () => {
-                    // In a real application, this would send data to a backend and fetch real comparables.
-                    // For this mockup, we just show the static comparable results.
-                    showComparablesResults.value = true;
-                };
-
-                return {
-                    isNewProcurementModalOpen,
-                    procurementDescription,
-                    procurementCategory,
-                    estimatedValue,
-                    deliveryProvince,
-                    showComparablesResults,
-                    comparables,
-                    openModal,
-                    closeModal,
-                    findComparables,
-                    searchTerm,
-                    filterProvince,
-                    filterCategory,
-                    filteredContracts
-                };
-            }
-        }).mount('#app');
-                const deliveryProvince = ref('');
-                const showComparablesResults = ref(false);
-
-                const comparables = reactive([
-                    {
-                        id: 'C98765',
-                        description: 'HR Software Implementation (Ontario)',
-                        vendor: 'TechSolutions Inc.',
-                        value: '$45,000',
-                        province: 'ON'
-                    },
-                    {
-                        id: 'C12345',
-                        description: 'IT Consulting Services (Alberta)',
-                        vendor: 'Global Consultants',
-                        value: '$120,000',
-                        province: 'AB'
-                    },
-                    {
-                        id: 'C54321',
-                        description: 'Office Supply Agreement (Quebec)',
-                        vendor: 'OfficeMart Canada',
-                        value: '$15,000',
-                        province: 'QC'
-                    }
-                ]);
-
-                const openModal = () => {
-                    isNewProcurementModalOpen.value = true;
-                    showComparablesResults.value = false; // Hide results when opening modal
-                };
-
-                const closeModal = () => {
-                    isNewProcurementModalOpen.value = false;
-                };
-
-                const findComparables = () => {
-                    // In a real application, this would send data to a backend and fetch real comparables.
-                    // For this mockup, we just show the static comparable results.
-                    showComparablesResults.value = true;
-                };
-
-                return {
-                    isNewProcurementModalOpen,
-                    procurementDescription,
-                    procurementCategory,
-                    estimatedValue,
-                    deliveryProvince,
-                    showComparablesResults,
-                    comparables,
-                    openModal,
-                    closeModal,
-                    findComparables
-                };
-            }
-        }).mount('#app');
-            setup() {
-                // Placeholder for Vue.js data and methods
-                // Will be populated in subsequent steps
-            }
-        }).mount('#app');
-
-        // Original Modal functionality (will be migrated to Vue later)
-        const newProcurementModal = document.getElementById('newProcurementModal');
-        const openNewProcurementModalBtn = document.getElementById('openNewProcurementModal');
-        const closeButton = newProcurementModal.querySelector('.close-button');
-        const findComparablesBtn = document.getElementById('findComparablesBtn');
-        const comparablesResults = document.getElementById('comparablesResults');
-
-        openNewProcurementModalBtn.onclick = function() {
-            newProcurementModal.style.display = 'flex';
-            comparablesResults.style.display = 'none'; // Hide results when opening modal
-        }
-
-        closeButton.onclick = function() {
-            newProcurementModal.style.display = 'none';
-        }
-
-        window.onclick = function(event) {
-            if (event.target == newProcurementModal) {
-                newProcurementModal.style.display = 'none';
-            }
-        }
-
-        findComparablesBtn.onclick = function() {
-            // In a real application, this would send data to a backend and fetch real comparables.
-            // For this mockup, we just show the static comparable results.
-            comparablesResults.style.display = 'block';
-            // You could dynamically generate results here based on input if needed for a more complex mockup
-            // For now, it just reveals the pre-filled dummy data.
-        }
-
-        // Original Search and Filter functionality (will be migrated to Vue later)
-        const contractSearch = document.getElementById('contractSearch');
-        const filterProvince = document.getElementById('filterProvince');
-        const filterCategory = document.getElementById('filterCategory');
-        const applyFiltersBtn = document.getElementById('applyFiltersBtn');
-        const contractList = document.getElementById('contractList');
-        const contractItems = Array.from(contractList.getElementsByClassName('contract-item'));
-        const noContractsMessage = document.getElementById('noContractsMessage');
-
-        function applyFilters() {
-            const searchTerm = contractSearch.value.toLowerCase();
-            const selectedProvince = filterProvince.value;
-            const selectedCategory = filterCategory.value;
-            let contractsFound = 0;
-
-            contractItems.forEach(item => {
-                const province = item.dataset.province;
-                const category = item.dataset.category;
-                const description = item.dataset.description.toLowerCase();
-                const content = item.textContent.toLowerCase();
-
-                const matchesSearch = content.includes(searchTerm);
-                const matchesProvince = selectedProvince === '' || province === selectedProvince;
-                const matchesCategory = selectedCategory === '' || category === selectedCategory;
-
-                if (matchesSearch && matchesProvince && matchesCategory) {
-                    item.style.display = 'flex';
-                    contractsFound++;
-                } else {
-                    item.style.display = 'none';
-                }
-            });
-
-            if (contractsFound === 0) {
-                noContractsMessage.style.display = 'block';
-            } else {
-                noContractsMessage.style.display = 'none';
-            }
-        }
-
-        // Attach event listeners
-        applyFiltersBtn.addEventListener('click', applyFilters);
-        // Optional: Apply filters on input/change immediately
-        contractSearch.addEventListener('keyup', applyFilters);
-        filterProvince.addEventListener('change', applyFilters);
-        filterCategory.addEventListener('change', applyFilters);
-
-        // Initial filter application to show all contracts
-        applyFilters();
-    </script>
-</body>
-</html>
-                    <option value="BC">British Columbia</option>
-                    <option value="MB">Manitoba</option>
-                    <option value="NB">New Brunswick</option>
-                    <option value="NL">Newfoundland and Labrador</option>
-                    <option value="NS">Nova Scotia</option>
-                    <option value="ON">Ontario</option>
-                    <option value="PE">Prince Edward Island</option>
-                    <option value="QC">Quebec</option>
-                    <option value="SK">Saskatchewan</option>
-                </select>
-                <select id="filterCategory">
-                    <option value="">All Categories</option>
-                    <option value="IT">Information Technology</option>
-                    <option value="Consulting">Consulting Services</option>
-                    <option value="Facilities">Facilities Management</option>
-                    <option value="Supplies">Office Supplies</option>
-                    <option value="Other">Other</option>
-                </select>
-                <button id="applyFiltersBtn" class="btn btn-secondary">Apply Filters</button>
-            </div>
-
-            <ul id="contractList" class="contract-list">
-                <!-- Contracts will be loaded here -->
-                <li class="contract-item" data-province="ON" data-category="IT" data-description="Software License Agreement">
-                    <strong>Contract ID: C001</strong><br>
-                    Description: Software License Agreement for Project Management Tools<br>
-                    Vendor: Agile Solutions Inc.<br>
-                    Value: $75,000<br>
-                    Province: ON<br>
-                    Category: IT
-                </li>
-                <li class="contract-item" data-province="BC" data-category="Consulting" data-description="Strategic Planning Consulting">
-                    <strong>Contract ID: C002</strong><br>
-                    Description: Strategic Planning Consulting Services<br>
-                    Vendor: West Coast Advisory<br>
-                    Value: $150,000<br>
-                    Province: BC<br>
-                    Category: Consulting
-                </li>
-                <li class="contract-item" data-province="AB" data-category="Facilities" data-description="Office Cleaning Services">
-                    <strong>Contract ID: C003</strong><br>
-                    Description: Office Cleaning Services for Government Buildings<br>
-                    Vendor: Alberta Cleaners Ltd.<br>
-                    Value: $30,000<br>
-                    Province: AB<br>
-                    Category: Facilities
-                </li>
-                <li class="contract-item" data-province="QC" data-category="Supplies" data-description="Bulk Office Supplies">
-                    <strong>Contract ID: C004</strong><br>
-                    Description: Bulk Office Supplies Procurement<br>
-                    Vendor: Bureau Direct<br>
-                    Value: $20,000<br>
-                    Province: QC<br>
-                    Category: Supplies
-                </li>
-                <li class="contract-item" data-province="ON" data-category="IT" data-description="Cloud Hosting Services">
-                    <strong>Contract ID: C005</strong><br>
-                    Description: Cloud Hosting Services for Data Management<br>
-                    Vendor: CloudNet Corp.<br>
-                    Value: $100,000<br>
-                    Province: ON<br>
-                    Category: IT
-                </li>
-                <li class="contract-item" data-province="MB" data-category="Consulting" data-description="HR Policy Review">
-                    <strong>Contract ID: C006</strong><br>
-                    Description: HR Policy Review and Update Consulting<br>
-                    Vendor: Prairies HR Solutions<br>
-                    Value: $60,000<br>
-                    Province: MB<br>
-                    Category: Consulting
-                </li>
-                <li class="contract-item" data-province="NS" data-category="Facilities" data-description="HVAC Maintenance">
-                    <strong>Contract ID: C007</strong><br>
-                    Description: HVAC System Maintenance for Public Buildings<br>
-                    Vendor: Maritime Climate Control<br>
-                    Value: $40,000<br>
-                    Province: NS<br>
-                    Category: Facilities
-                </li>
-            </ul>
-            <p id="noContractsMessage" class="no-results" style="display: none;">No contracts found matching your criteria.</p>
-        </section>
-    </div>
-
-    <script>
-        // Modal functionality
-        const newProcurementModal = document.getElementById('newProcurementModal');
-        const openNewProcurementModalBtn = document.getElementById('openNewProcurementModal');
-        const closeButton = newProcurementModal.querySelector('.close-button');
-        const findComparablesBtn = document.getElementById('findComparablesBtn');
-        const comparablesResults = document.getElementById('comparablesResults');
-
-        openNewProcurementModalBtn.onclick = function() {
-            newProcurementModal.style.display = 'flex';
-            comparablesResults.style.display = 'none'; // Hide results when opening modal
-        }
-
-        closeButton.onclick = function() {
-            newProcurementModal.style.display = 'none';
-        }
-
-        window.onclick = function(event) {
-            if (event.target == newProcurementModal) {
-                newProcurementModal.style.display = 'none';
-            }
-        }
-
-        findComparablesBtn.onclick = function() {
-            // In a real application, this would send data to a backend and fetch real comparables.
-            // For this mockup, we just show the static comparable results.
-            comparablesResults.style.display = 'block';
-            // You could dynamically generate results here based on input if needed for a more complex mockup
-            // For now, it just reveals the pre-filled dummy data.
-        }
-
-        // Search and Filter functionality
-        const contractSearch = document.getElementById('contractSearch');
-        const filterProvince = document.getElementById('filterProvince');
-        const filterCategory = document.getElementById('filterCategory');
-        const applyFiltersBtn = document.getElementById('applyFiltersBtn');
-        const contractList = document.getElementById('contractList');
-        const contractItems = Array.from(contractList.getElementsByClassName('contract-item'));
-        const noContractsMessage = document.getElementById('noContractsMessage');
-
-        function applyFilters() {
-            const searchTerm = contractSearch.value.toLowerCase();
-            const selectedProvince = filterProvince.value;
-            const selectedCategory = filterCategory.value;
-            let contractsFound = 0;
-
-            contractItems.forEach(item => {
-                const province = item.dataset.province;
-                const category = item.dataset.category;
-                const description = item.dataset.description.toLowerCase();
-                const content = item.textContent.toLowerCase();
-
-                const matchesSearch = content.includes(searchTerm);
-                const matchesProvince = selectedProvince === '' || province === selectedProvince;
-                const matchesCategory = selectedCategory === '' || category === selectedCategory;
-
-                if (matchesSearch && matchesProvince && matchesCategory) {
-                    item.style.display = 'flex';
-                    contractsFound++;
-                } else {
-                    item.style.display = 'none';
-                }
-            });
-
-            if (contractsFound === 0) {
-                noContractsMessage.style.display = 'block';
-            } else {
-                noContractsMessage.style.display = 'none';
-            }
-        }
-
-        // Attach event listeners
-        applyFiltersBtn.addEventListener('click', applyFilters);
-        // Optional: Apply filters on input/change immediately
-        contractSearch.addEventListener('keyup', applyFilters);
-        filterProvince.addEventListener('change', applyFilters);
-        filterCategory.addEventListener('change', applyFilters);
-
-        // Initial filter application to show all contracts
-        applyFilters();
     </script>
 </body>
 </html>
