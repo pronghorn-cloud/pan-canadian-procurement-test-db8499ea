@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>National Procurement Tool</title>
+    <style>
+        :root {
+            --primary-red: #d50000; /* Canadian Red */
+            --secondary-white: #ffffff;
+            --light-grey: #f4f4f4;
+            --dark-grey: #333;
+            --border-grey: #ccc;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--light-grey);
+            color: var(--dark-grey);
+        }
+
+        header {
+            background-color: var(--primary-red);
+            color: var(--secondary-white);
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .maple-leaf-logo {
+            font-size: 30px;
+            margin-right: 15px;
+            color: var(--secondary-white);
+            /* Basic SVG maple leaf for mockup */
+            content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M12 2C9.5 2 7 3.5 7 6c0 1.5.5 2.5 1.5 3.5C9.5 10.5 10 11 10 12h-2c0 2 1 3 2 4s2 2 4 2 3-1 4-2 2-2 2-4h-2c0-1-0.5-1.5-1.5-2.5C16.5 6.5 17 5.5 17 4c0-2.5-2.5-4-5-4zM12 21c-1.5 0-3-1-4-2s-2-2-2-4h2c0 1 0.5 1.5 1.5 2.5C9.5 16.5 10 17 10 18h2c0-1 0.5-1.5 1.5-2.5C14.5 14.5 15 14 15 13h2c0 2-1 3-2 4s-2 2-4 2z"/><path d="M12 2C9.5 2 7 3.5 7 6c0 1.5.5 2.5 1.5 3.5C9.5 10.5 10 11 10 12h-2c0 2 1 3 2 4s2 2 4 2 3-1 4-2 2-2 2-4h-2c0-1-0.5-1.5-1.5-2.5C16.5 6.5 17 5.5 17 4c0-2.5-2.5-4-5-4zM12 21c-1.5 0-3-1-4-2s-2-2-2-4h2c0 1 0.5 1.5 1.5 2.5C9.5 16.5 10 17 10 18h2c0-1 0.5-1.5 1.5-2.5C14.5 14.5 15 14 15 13h2c0 2-1 3-2 4s-2 2-4 2z"/></svg>');
+            width: 30px; /* Adjust size as needed */
+            height: 30px;
+            vertical-align: middle;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: var(--secondary-white);
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        section {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-grey);
+        }
+
+        section:last-child {
+            border-bottom: none;
+        }
+
+        h2 {
+            color: var(--primary-red);
+            border-bottom: 2px solid var(--primary-red);
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+
+        .btn {
+            background-color: var(--primary-red);
+            color: var(--secondary-white);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #a00000; /* Darker red on hover */
+        }
+
+        .btn-secondary {
+            background-color: var(--dark-grey);
+            color: var(--secondary-white);
+        }
+
+        .btn-secondary:hover {
+            background-color: #555;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 100; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: var(--secondary-white);
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 700px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            position: relative;
+        }
+
+        .close-button {
+            color: var(--dark-grey);
+            font-size: 28px;
+            font-weight: bold;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            cursor: pointer;
+        }
+
+        .close-button:hover,
+        .close-button:focus {
+            color: var(--primary-red);
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .modal-body label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .modal-body input[type="text"],
+        .modal-body textarea,
+        .modal-body select {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid var(--border-grey);
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .comparables-results {
+            margin-top: 20px;
+            border-top: 1px solid var(--border-grey);
+            padding-top: 20px;
+        }
+
+        .comparable-item {
+            background-color: var(--light-grey);
+            border: 1px solid var(--border-grey);
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+
+        .comparable-item strong {
+            color: var(--primary-red);
+        }
+
+        /* Search and Filter Styles */
+        .search-filter-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .search-filter-controls input,
+        .search-filter-controls select {
+            padding: 10px;
+            border: 1px solid var(--border-grey);
+            border-radius: 4px;
+            font-size: 16px;
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .contract-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .contract-item {
+            background-color: var(--light-grey);
+            border: 1px solid var(--border-grey);
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .contract-item strong {
+            color: var(--primary-red);
+        }
+
+        .no-results {
+            text-align: center;
+            color: var(--dark-grey);
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <span class="maple-leaf-logo" aria-label="Maple Leaf Logo"></span>
+        <h1>National Procurement Tool</h1>
+    </header>
+
+    <div class="container">
+        <section id="new-procurement">
+            <h2>New Procurement Request</h2>
+            <p>Initiate a new procurement request and find comparable contracts across provinces.</p>
+            <button id="openNewProcurementModal" class="btn">Start New Procurement</button>
+
+            <!-- New Procurement Modal -->
+            <div id="newProcurementModal" class="modal">
+                <div class="modal-content">
+                    <span class="close-button">&times;</span>
+                    <h3>New Procurement Details</h3>
+                    <div class="modal-body">
+                        <label for="procurementDescription">Description of Needs:</label>
+                        <textarea id="procurementDescription" rows="5" placeholder="e.g., Software for HR management, Consulting services for IT infrastructure, etc." required></textarea>
+
+                        <label for="procurementCategory">Category:</label>
+                        <select id="procurementCategory">
+                            <option value="">Select Category</option>
+                            <option value="IT">Information Technology</option>
+                            <option value="Consulting">Consulting Services</option>
+                            <option value="Facilities">Facilities Management</option>
+                            <option value="Supplies">Office Supplies</option>
+                            <option value="Other">Other</option>
+                        </select>
+
+                        <label for="estimatedValue">Estimated Value (CAD):</label>
+                        <input type="text" id="estimatedValue" placeholder="e.g., 50,000, 1,000,000">
+
+                        <label for="deliveryProvince">Desired Delivery Province:</label>
+                        <select id="deliveryProvince">
+                            <option value="">Select Province</option>
+                            <option value="AB">Alberta</option>
+                            <option value="BC">British Columbia</option>
+                            <option value="MB">Manitoba</option>
+                            <option value="NB">New Brunswick</option>
+                            <option value="NL">Newfoundland and Labrador</option>
+                            <option value="NS">Nova Scotia</option>
+                            <option value="ON">Ontario</option>
+                            <option value="PE">Prince Edward Island</option>
+                            <option value="QC">Quebec</option>
+                            <option value="SK">Saskatchewan</option>
+                        </select>
+
+                        <button id="findComparablesBtn" class="btn">Find Comparables</button>
+
+                        <div id="comparablesResults" class="comparables-results" style="display: none;">
+                            <h4>Comparable Contracts Found:</h4>
+                            <div id="comparablesList">
+                                <!-- Comparables will be loaded here -->
+                                <div class="comparable-item">
+                                    <strong>Contract ID: C98765</strong><br>
+                                    Description: HR Software Implementation (Ontario)<br>
+                                    Vendor: TechSolutions Inc.<br>
+                                    Value: $45,000<br>
+                                    Province: ON
+                                </div>
+                                <div class="comparable-item">
+                                    <strong>Contract ID: C12345</strong><br>
+                                    Description: IT Consulting Services (Alberta)<br>
+                                    Vendor: Global Consultants<br>
+                                    Value: $120,000<br>
+                                    Province: AB
+                                </div>
+                                <div class="comparable-item">
+                                    <strong>Contract ID: C54321</strong><br>
+                                    Description: Office Supply Agreement (Quebec)<br>
+                                    Vendor: OfficeMart Canada<br>
+                                    Value: $15,000<br>
+                                    Province: QC
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="current-contracts">
+            <h2>Search Existing Contracts</h2>
+            <p>Browse and filter existing contracts to find comparables or market information.</p>
+            <div class="search-filter-controls">
+                <input type="text" id="contractSearch" placeholder="Search by description, vendor, ID...">
+                <select id="filterProvince">
+                    <option value="">All Provinces</option>
+                    <option value="AB">Alberta</option>
+                    <option value="BC">British Columbia</option>
+                    <option value="MB">Manitoba</option>
+                    <option value="NB">New Brunswick</option>
+                    <option value="NL">Newfoundland and Labrador</option>
+                    <option value="NS">Nova Scotia</option>
+                    <option value="ON">Ontario</option>
+                    <option value="PE">Prince Edward Island</option>
+                    <option value="QC">Quebec</option>
+                    <option value="SK">Saskatchewan</option>
+                </select>
+                <select id="filterCategory">
+                    <option value="">All Categories</option>
+                    <option value="IT">Information Technology</option>
+                    <option value="Consulting">Consulting Services</option>
+                    <option value="Facilities">Facilities Management</option>
+                    <option value="Supplies">Office Supplies</option>
+                    <option value="Other">Other</option>
+                </select>
+                <button id="applyFiltersBtn" class="btn btn-secondary">Apply Filters</button>
+            </div>
+
+            <ul id="contractList" class="contract-list">
+                <!-- Contracts will be loaded here -->
+                <li class="contract-item" data-province="ON" data-category="IT" data-description="Software License Agreement">
+                    <strong>Contract ID: C001</strong><br>
+                    Description: Software License Agreement for Project Management Tools<br>
+                    Vendor: Agile Solutions Inc.<br>
+                    Value: $75,000<br>
+                    Province: ON<br>
+                    Category: IT
+                </li>
+                <li class="contract-item" data-province="BC" data-category="Consulting" data-description="Strategic Planning Consulting">
+                    <strong>Contract ID: C002</strong><br>
+                    Description: Strategic Planning Consulting Services<br>
+                    Vendor: West Coast Advisory<br>
+                    Value: $150,000<br>
+                    Province: BC<br>
+                    Category: Consulting
+                </li>
+                <li class="contract-item" data-province="AB" data-category="Facilities" data-description="Office Cleaning Services">
+                    <strong>Contract ID: C003</strong><br>
+                    Description: Office Cleaning Services for Government Buildings<br>
+                    Vendor: Alberta Cleaners Ltd.<br>
+                    Value: $30,000<br>
+                    Province: AB<br>
+                    Category: Facilities
+                </li>
+                <li class="contract-item" data-province="QC" data-category="Supplies" data-description="Bulk Office Supplies">
+                    <strong>Contract ID: C004</strong><br>
+                    Description: Bulk Office Supplies Procurement<br>
+                    Vendor: Bureau Direct<br>
+                    Value: $20,000<br>
+                    Province: QC<br>
+                    Category: Supplies
+                </li>
+                <li class="contract-item" data-province="ON" data-category="IT" data-description="Cloud Hosting Services">
+                    <strong>Contract ID: C005</strong><br>
+                    Description: Cloud Hosting Services for Data Management<br>
+                    Vendor: CloudNet Corp.<br>
+                    Value: $100,000<br>
+                    Province: ON<br>
+                    Category: IT
+                </li>
+                <li class="contract-item" data-province="MB" data-category="Consulting" data-description="HR Policy Review">
+                    <strong>Contract ID: C006</strong><br>
+                    Description: HR Policy Review and Update Consulting<br>
+                    Vendor: Prairies HR Solutions<br>
+                    Value: $60,000<br>
+                    Province: MB<br>
+                    Category: Consulting
+                </li>
+                <li class="contract-item" data-province="NS" data-category="Facilities" data-description="HVAC Maintenance">
+                    <strong>Contract ID: C007</strong><br>
+                    Description: HVAC System Maintenance for Public Buildings<br>
+                    Vendor: Maritime Climate Control<br>
+                    Value: $40,000<br>
+                    Province: NS<br>
+                    Category: Facilities
+                </li>
+            </ul>
+            <p id="noContractsMessage" class="no-results" style="display: none;">No contracts found matching your criteria.</p>
+        </section>
+    </div>
+
+    <script>
+        // Modal functionality
+        const newProcurementModal = document.getElementById('newProcurementModal');
+        const openNewProcurementModalBtn = document.getElementById('openNewProcurementModal');
+        const closeButton = newProcurementModal.querySelector('.close-button');
+        const findComparablesBtn = document.getElementById('findComparablesBtn');
+        const comparablesResults = document.getElementById('comparablesResults');
+
+        openNewProcurementModalBtn.onclick = function() {
+            newProcurementModal.style.display = 'flex';
+            comparablesResults.style.display = 'none'; // Hide results when opening modal
+        }
+
+        closeButton.onclick = function() {
+            newProcurementModal.style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            if (event.target == newProcurementModal) {
+                newProcurementModal.style.display = 'none';
+            }
+        }
+
+        findComparablesBtn.onclick = function() {
+            // In a real application, this would send data to a backend and fetch real comparables.
+            // For this mockup, we just show the static comparable results.
+            comparablesResults.style.display = 'block';
+            // You could dynamically generate results here based on input if needed for a more complex mockup
+            // For now, it just reveals the pre-filled dummy data.
+        }
+
+        // Search and Filter functionality
+        const contractSearch = document.getElementById('contractSearch');
+        const filterProvince = document.getElementById('filterProvince');
+        const filterCategory = document.getElementById('filterCategory');
+        const applyFiltersBtn = document.getElementById('applyFiltersBtn');
+        const contractList = document.getElementById('contractList');
+        const contractItems = Array.from(contractList.getElementsByClassName('contract-item'));
+        const noContractsMessage = document.getElementById('noContractsMessage');
+
+        function applyFilters() {
+            const searchTerm = contractSearch.value.toLowerCase();
+            const selectedProvince = filterProvince.value;
+            const selectedCategory = filterCategory.value;
+            let contractsFound = 0;
+
+            contractItems.forEach(item => {
+                const province = item.dataset.province;
+                const category = item.dataset.category;
+                const description = item.dataset.description.toLowerCase();
+                const content = item.textContent.toLowerCase();
+
+                const matchesSearch = content.includes(searchTerm);
+                const matchesProvince = selectedProvince === '' || province === selectedProvince;
+                const matchesCategory = selectedCategory === '' || category === selectedCategory;
+
+                if (matchesSearch && matchesProvince && matchesCategory) {
+                    item.style.display = 'flex';
+                    contractsFound++;
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+
+            if (contractsFound === 0) {
+                noContractsMessage.style.display = 'block';
+            } else {
+                noContractsMessage.style.display = 'none';
+            }
+        }
+
+        // Attach event listeners
+        applyFiltersBtn.addEventListener('click', applyFilters);
+        // Optional: Apply filters on input/change immediately
+        contractSearch.addEventListener('keyup', applyFilters);
+        filterProvince.addEventListener('change', applyFilters);
+        filterCategory.addEventListener('change', applyFilters);
+
+        // Initial filter application to show all contracts
+        applyFilters();
+    </script>
+</body>
+</html>
